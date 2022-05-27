@@ -18,7 +18,8 @@ actions:
         environment: mdi-demo # environment name; if omitted, uses an automated, sharable name
         condaFamilies:
             - base
-            - r-4.1         
+            - r-4.1   
+            - snakemake      
         optionFamilies:
             - demo      # this is a private options module
     do:
@@ -37,8 +38,6 @@ actions:
     snakemake:
         order: 2
         thread: snakemake
-        condaFamilies: 
-            - snakemake
         optionFamilies:
             - snakemake # this is a shared options module
         resources:
