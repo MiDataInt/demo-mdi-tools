@@ -5,7 +5,7 @@
 pipeline:
     name: demo
     description: "a working pipeline demo that performs simple text and plotting actions"
-    version: v0.0.1
+    version: v1.0.0
 
 #--------------------------------------------------------------------
 # REQUIRED: pipeline-specific actions, called as 'mdi <pipelineName> <action> [options]', etc.
