@@ -5,11 +5,9 @@
 # semantic version is of form v0.0.0: https://semver.org/
 # external modules will come from latest suite versions unless listed in suiteVersions
 #----------------------------------------------------------------------
-name: Example
-description: "Example of descriptive text"
-# version: v0.0.0 # OPTIONAL
-# suiteVersions:
-#     suiteName: v0.0.0
+name: Demo
+description: "A working app demo that displays outputs from the paired demo pipeline"
+version: v0.0.1
 
 #----------------------------------------------------------------------
 # project data file type(s) associated with this app
@@ -17,9 +15,11 @@ description: "Example of descriptive text"
 #   - required files lead to rejection of a project file if missing
 #----------------------------------------------------------------------
 uploadTypes:
-    example-type: 
+    demoData: 
         contentFileTypes: # anything not listed will not be available to the app
-            example:  
+            directoryContents:  
+                required: true
+            dataFrame:  
                 required: true
 
 #----------------------------------------------------------------------
@@ -37,21 +37,9 @@ uploadTypes:
 appSteps:
     upload: # nearly always the 1st step of every app
         module: sourceFileUpload
-    assign: # usually the 2nd step of every app
-        module: assignSamples        
-        options:
-            categories:
-                example1: # category1
-                    singular: Example
-                    plural: Examples
-                    nLevels: 1:10
-                example2: # category2
-                    singular: Example
-                    plural: Examples
-                    nLevels: 1:10
-    analyze:
-        module: runAnalyses
-        options:
-            analysisTypes:
-                example:
-                    - example
+        shortLabel: "Adjust Data Sources"
+        shortDescription: "Drag and drop additional source data file(s)."
+    display: # usually the 2nd step of every app
+        module: displayResults
+    withCode:
+        module: withCode

@@ -24,7 +24,7 @@ with the following properties:
 
 ### Install this tool suite
 
-Add GIT_USER/SUITE_NAME to the suites list:
+Add MiDataInt/demo to the suites list:
 
 ```bash
 server edit suites.yml
@@ -36,13 +36,6 @@ Then:
 server build
 server install
 ```
-
-### OPTIONAL: Download/install resources
-
-```bash
-cd /srv/mdi/resource-scripts
-git clone https://github.com/GIT_USER/RESOURCES_NAME.git
-server resource RESOURCES_NAME/SCRIPT_NAME.sh
 ```
 
 ### Save the image
