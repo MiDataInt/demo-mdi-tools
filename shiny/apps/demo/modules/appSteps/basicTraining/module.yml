@@ -1,0 +1,23 @@
+#----------------------------------------------------------------------
+# ui
+#----------------------------------------------------------------------
+
+# label shown on dashboard menu 
+shortLabel: "Basic Training"
+
+# description shown on the Overview page
+shortDescription: "App step used during Basic Training"
+
+# text shown at top of appStep tab  
+longLabel: "App step used during Basic Training"
+
+#----------------------------------------------------------------------
+# server
+#----------------------------------------------------------------------
+
+# names of the type(s) of this module ...
+types:
+    - basicTraining
+    
+# ... and of its dependencies
+sourceTypes: upload
