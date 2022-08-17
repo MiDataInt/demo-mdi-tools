@@ -11,7 +11,11 @@ basicTrainingUI <- function(id, options) {
 
     # return the UI contents
     standardSequentialTabItem(
-        options$longLabel,
+        HTML(paste( 
+            options$longLabel, 
+            if(!serverEnv$IS_SERVER) rConsoleLink(ns('console')) else "",
+            aceEditorLink(ns('code')) 
+        )),
 
         ##################################
         # add your UI elements here, replacing the code below

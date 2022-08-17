@@ -8,6 +8,7 @@
 name: Demo
 description: "A working app demo that displays outputs from the paired demo pipeline"
 version: v0.0.1
+# suiteVersion: null
 
 #----------------------------------------------------------------------
 # project data file type(s) associated with this app
@@ -39,9 +40,7 @@ appSteps:
         module: sourceFileUpload
         shortLabel: "Adjust Data Sources"
         shortDescription: "Drag and drop additional source data file(s)."
-    display: # usually the 2nd step of every app
+    display:
         module: displayResults
-    withCode:
-        module: withCode
     # basicTraining:
     #     module: basicTraining
