@@ -8,22 +8,15 @@ displayResultsServer <- function(id, options, bookmark, locks) { # always follow
 #----------------------------------------------------------------------
 
 #----------------------------------------------------------------------
-# initialize code and R console links
+# initialize settings and other step-level links
 #----------------------------------------------------------------------
-moduleEnv <- environment()
-observeEvent(input$code, showAceEditor(
-    session, 
-    baseDirs = file.path(app$DIRECTORY, "modules/appSteps/displayResults"),
-    editable = serverEnv$IS_DEVELOPER
-))
-observeEvent(input$console, showRConsole(session, envir = moduleEnv, label = module))
-
-#----------------------------------------------------------------------
-# initialize tab settings, exposed by gear icon click
-#----------------------------------------------------------------------
-settings <- stepSettingsServer(
-    id = 'settings',
-    parentId = id
+settings <- activateMdiHeaderLinks(
+    id,
+    session,
+    dir = getAppStepDir(module),
+    envir = environment(),
+    baseDirs = getAppStepDir(module),
+    settings = TRUE
 )
 
 #----------------------------------------------------------------------

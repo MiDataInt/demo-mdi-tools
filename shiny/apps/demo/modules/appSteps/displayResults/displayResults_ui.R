@@ -11,13 +11,14 @@ displayResultsUI <- function(id, options) {
 
     # return the UI contents
     standardSequentialTabItem(
-        HTML(paste( 
-            options$longLabel, 
-            if(!serverEnv$IS_SERVER) rConsoleLink(ns('console')) else "",
-            aceEditorLink(ns('code')),
-            stepSettingsUI(ns('settings')) 
-        )),
-        options$leaderText,
+        options$longLabel,
+        options$leaderText, 
+        id = id,
+        documentation = FALSE, 
+        terminal = TRUE,
+        console = TRUE,
+        code = TRUE,
+        settings = TRUE,
 
         # select the input data source to display
         dataSourceTableUI(
