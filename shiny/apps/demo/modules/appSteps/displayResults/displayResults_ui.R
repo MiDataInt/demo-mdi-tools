@@ -14,10 +14,8 @@ displayResultsUI <- function(id, options) {
         options$longLabel,
         options$leaderText, 
         id = id,
-        documentation = FALSE, 
-        terminal = TRUE,
+        code = TRUE,        
         console = TRUE,
-        code = TRUE,
         settings = TRUE,
 
         # select the input data source to display
@@ -64,6 +62,16 @@ displayResultsUI <- function(id, options) {
                 width = 7,
                 title = "Directory Listing",
                 verbatimTextOutput(ns('ls'))
+            )
+        ),
+
+        # additional plots using MDI widget boxes
+        fluidRow(
+            staticPlotBoxUI(
+                ns("staticPlotBox"), 
+                width = 6,
+                title = "Static Plot Box",
+                code = TRUE
             )
         )
     ) 

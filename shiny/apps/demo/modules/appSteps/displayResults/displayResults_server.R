@@ -13,9 +13,8 @@ displayResultsServer <- function(id, options, bookmark, locks) { # always follow
 settings <- activateMdiHeaderLinks(
     id,
     session,
-    dir = getAppStepDir(module),
+    baseDirs = getAppStepDir(module),    
     envir = environment(),
-    baseDirs = getAppStepDir(module),
     settings = TRUE
 )
 
@@ -47,6 +46,8 @@ output$mtcars <- renderDT({
 output$plot <- renderPlot({
     d <- myMtCars()
     req(d)
+    req(input$xAxisCol)
+    req(input$yAxisCol)
     plot(
         d[[input$xAxisCol]], 
         d[[input$yAxisCol]],
@@ -54,7 +55,7 @@ output$plot <- renderPlot({
         ylab = input$yAxisCol,
         pch = 19,
         col = settings$get('Plot_Options', 'Point_Color')
-    )
+    ) 
 })
 
 # text output of file listing, as executed by the demo pipeline
@@ -67,6 +68,41 @@ output$ls <- renderText({
         sep = "\n"
     )
 })
+
+
+#----------------------------------------------------------------------
+# render additional output elements using MDI widget boxes
+#----------------------------------------------------------------------
+staticPlot <- staticPlotBoxServer(
+    "staticPlotBox",
+    points  = TRUE,
+    margins = TRUE,
+    title   = TRUE,
+    baseDirs = getAppStepDir(module),
+    immediate = TRUE,
+    size = "m",
+    create = function() {
+        d <- myMtCars()
+        req(d)
+        xcol <- input$xAxisCol
+        ycol <- input$yAxisCol
+        req(xcol)
+        req(ycol)
+        x <- d[[xcol]]
+        y <- d[[ycol]]
+        staticPlot$initializeFrame(
+            xlim = range(x),
+            ylim = range(y),
+            xlab = xcol,
+            ylab = ycol
+        )
+        staticPlot$addPoints(
+            x = x,
+            y = y,
+            col = settings$get('Plot_Options', 'Point_Color')
+        )
+    }
+)
 
 #----------------------------------------------------------------------
 # define bookmarking actions
