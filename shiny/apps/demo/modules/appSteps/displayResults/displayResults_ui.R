@@ -69,9 +69,20 @@ displayResultsUI <- function(id, options) {
         fluidRow(
             staticPlotBoxUI(
                 ns("staticPlotBox"), 
+                status = 'primary',
+                solidHeader = FALSE,
                 width = 6,
                 title = "Static Plot Box",
                 code = TRUE
+            ),
+            interactivePlotBoxUI(
+                ns('interactivePlotBox'),
+                status = 'primary',
+                solidHeader = FALSE,
+                width = 6,
+                title = "Interactive Scatter Plot", 
+                code = TRUE,
+                type = "scatter"            
             )
         )
     ) 

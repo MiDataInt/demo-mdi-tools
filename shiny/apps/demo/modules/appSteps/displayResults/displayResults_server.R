@@ -11,11 +11,10 @@ displayResultsServer <- function(id, options, bookmark, locks) { # always follow
 # initialize settings and other step-level links
 #----------------------------------------------------------------------
 settings <- activateMdiHeaderLinks(
-    id,
     session,
     baseDirs = getAppStepDir(module),    
     envir = environment(),
-    settings = TRUE
+    settings = id
 )
 
 #----------------------------------------------------------------------
@@ -69,7 +68,6 @@ output$ls <- renderText({
     )
 })
 
-
 #----------------------------------------------------------------------
 # render additional output elements using MDI widget boxes
 #----------------------------------------------------------------------
@@ -103,6 +101,44 @@ staticPlot <- staticPlotBoxServer(
         )
     }
 )
+xyData <- reactive({
+    data.frame( # TODO: ip should handle this (needs to call as.data.table())
+        x = 1:4,
+        y = 1:4
+    )
+})
+interactivePlotBoxServer(
+    'interactivePlotBox', 
+    type = "scatter",
+    baseDirs = getAppStepDir(module),
+    plotData = xyData
+)
+
+# interactiveScatterplotServer(
+#     'interactivePlot',
+#     plotData = xyData
+ 
+#     # mode = "markers",
+#     # color = NA,
+#     # symbol = NA,   
+#     # pointSize = 3,
+#     # lineWidth = 2,
+
+#     # xtitle = "x",
+#     # xrange = NULL,
+#     # xzeroline = TRUE,
+#     # ytitle = "y",
+#     # yrange = NULL,
+#     # yzeroline = TRUE,
+
+#     # selectable = FALSE,
+#     # clickable  = FALSE,
+
+
+#     # fitMethod = NULL, 
+#     # fitColor = NA,
+
+# )
 
 #----------------------------------------------------------------------
 # define bookmarking actions
