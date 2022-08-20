@@ -3,26 +3,26 @@
 #----------------------------------------------------------------------
 displayResultsServer <- function(id, options, bookmark, locks) { # always follow this pattern
     moduleServer(id, function(input, output, session) {
-        ns <- NS(id) # in case we create inputs, e.g. via renderUI
-        module <- 'displayResults' # for reportProgress tracing
 #----------------------------------------------------------------------
 
 #----------------------------------------------------------------------
-# initialize settings and other step-level links
+# initialize appStep settings and other step-level links
 #----------------------------------------------------------------------
+module <- 'displayResults' # for reportProgress tracing
 settings <- activateMdiHeaderLinks(
     session,
     baseDirs = getAppStepDir(module),    
     envir = environment(),
     settings = id
 )
+color <- reactive({
+    CONSTANTS$plotlyColors[[settings$get('Plot_Options', 'Point_Color')]]
+})
 
 #----------------------------------------------------------------------
 # initialize data source selection via a table
 #----------------------------------------------------------------------
-sourceId <- dataSourceTableServer(
-    id = 'select'
-)
+sourceId <- dataSourceTableServer(id = 'select')
 myMtCars <- reactive({ # the R mtcars data set, sent to us via the demo pipeline
     sourceId <- sourceId() # the table selection
     req(sourceId)
@@ -33,44 +33,51 @@ myMtCars <- reactive({ # the R mtcars data set, sent to us via the demo pipeline
 })
 
 #----------------------------------------------------------------------
-# render output elements
+# cascade to two columns of data for plotting
 #----------------------------------------------------------------------
-
-# data table
-output$mtcars <- renderDT({
-    myMtCars()
-})
-
-# correlation plot with selectable axis and point color setting
-output$plot <- renderPlot({
+plotData <- reactive({
     d <- myMtCars()
     req(d)
     req(input$xAxisCol)
     req(input$yAxisCol)
-    plot(
-        d[[input$xAxisCol]], 
-        d[[input$yAxisCol]],
-        xlab = input$xAxisCol,
-        ylab = input$yAxisCol,
-        pch = 19,
-        col = settings$get('Plot_Options', 'Point_Color')
-    ) 
-})
-
-# text output of file listing, as executed by the demo pipeline
-output$ls <- renderText({
-    sourceId <- sourceId()
-    req(sourceId)
-    paste(
-        getSourcePackageOption(sourceId, "demo", "input-dir"),
-        slurpFile( getSourceFilePath(sourceId, 'directoryContents') ),
-        sep = "\n"
+    list(
+        val = data.frame(
+            x = d[[input$xAxisCol]], 
+            y = d[[input$yAxisCol]]
+        ),
+        col = list(
+            x = input$xAxisCol,
+            y = input$yAxisCol
+        )  
     )
 })
 
 #----------------------------------------------------------------------
-# render additional output elements using MDI widget boxes
+# render output data table
 #----------------------------------------------------------------------
+output$mtcars <- renderDT({
+    myMtCars()
+})
+
+#----------------------------------------------------------------------
+# render scatterplot in three ways
+#----------------------------------------------------------------------
+
+# display the plot using a custom module
+output$plot <- renderPlot({
+    d <- plotData()
+    req(d)
+    plot(
+        d$val$x, 
+        d$val$y,
+        xlab = d$col$x,
+        ylab = d$col$y,
+        pch = 19,
+        col = color()
+    ) 
+})
+
+# display the plot using the MDI staticPlotBox module
 staticPlot <- staticPlotBoxServer(
     "staticPlotBox",
     points  = TRUE,
@@ -80,65 +87,47 @@ staticPlot <- staticPlotBoxServer(
     immediate = TRUE,
     size = "m",
     create = function() {
-        d <- myMtCars()
+        d <- plotData()
         req(d)
-        xcol <- input$xAxisCol
-        ycol <- input$yAxisCol
-        req(xcol)
-        req(ycol)
-        x <- d[[xcol]]
-        y <- d[[ycol]]
         staticPlot$initializeFrame(
-            xlim = range(x),
-            ylim = range(y),
-            xlab = xcol,
-            ylab = ycol
+            xlim = range(d$val$x),
+            ylim = range(d$val$y),
+            xlab = d$col$x,
+            ylab = d$col$y
         )
         staticPlot$addPoints(
-            x = x,
-            y = y,
-            col = settings$get('Plot_Options', 'Point_Color')
+            x = d$val$x,
+            y = d$val$y,
+            col = color()
         )
     }
 )
-xyData <- reactive({
-    data.frame( # TODO: ip should handle this (needs to call as.data.table())
-        x = 1:4,
-        y = 1:4
-    )
-})
+
+# display the plot using the MDI interactiveScatterPlot module
 interactivePlotBoxServer(
     'interactivePlotBox', 
     type = "scatter",
     baseDirs = getAppStepDir(module),
-    plotData = xyData
+    plotData = reactive({
+        plotData()$val
+    }),
+    pointSize = 6,
+    xtitle = reactive({ plotData()$col$x }),
+    ytitle = reactive({ plotData()$col$y })
 )
 
-# interactiveScatterplotServer(
-#     'interactivePlot',
-#     plotData = xyData
- 
-#     # mode = "markers",
-#     # color = NA,
-#     # symbol = NA,   
-#     # pointSize = 3,
-#     # lineWidth = 2,
-
-#     # xtitle = "x",
-#     # xrange = NULL,
-#     # xzeroline = TRUE,
-#     # ytitle = "y",
-#     # yrange = NULL,
-#     # yzeroline = TRUE,
-
-#     # selectable = FALSE,
-#     # clickable  = FALSE,
-
-
-#     # fitMethod = NULL, 
-#     # fitColor = NA,
-
-# )
+#----------------------------------------------------------------------
+# render the text output of file listing, as executed by the demo pipeline
+#----------------------------------------------------------------------
+output$ls <- renderText({
+    sourceId <- sourceId()
+    req(sourceId)
+    paste(
+        getSourcePackageOption(sourceId, "demo", "input-dir"),
+        slurpFile( getSourceFilePath(sourceId, 'directoryContents') ),
+        sep = "\n"
+    )
+})
 
 #----------------------------------------------------------------------
 # define bookmarking actions

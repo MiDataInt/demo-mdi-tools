@@ -11,11 +11,12 @@ basicTrainingUI <- function(id, options) {
 
     # return the UI contents
     standardSequentialTabItem(
-        HTML(paste( 
-            options$longLabel, 
-            if(!serverEnv$IS_SERVER) rConsoleLink(ns('console')) else "",
-            aceEditorLink(ns('code')) 
-        )),
+        options$longLabel, # text at the top of the page
+        options$leaderText,
+        id = id, # create icon links at the top of the page
+        documentation = TRUE,
+        code = TRUE,
+        console = TRUE, 
 
         ##################################
         # add your UI elements here, replacing the code below

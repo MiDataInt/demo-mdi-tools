@@ -3,19 +3,18 @@
 #----------------------------------------------------------------------
 basicTrainingServer <- function(id, options, bookmark, locks) { # always follow this pattern
     moduleServer(id, function(input, output, session) {
-        module <- 'basicTraining' # for reportProgress tracing
 #----------------------------------------------------------------------
 
 #----------------------------------------------------------------------
-# initialize code and R console links
+# initialize the header links
 #----------------------------------------------------------------------
-moduleEnv <- environment()
-observeEvent(input$code, showAceEditor(
-    session, 
-    baseDirs = file.path(app$DIRECTORY, "modules/appSteps/displayResults"),
-    editable = serverEnv$IS_DEVELOPER
-))
-observeEvent(input$console, showRConsole(session, envir = moduleEnv, label = module))
+module <- "basicTraining"
+activateMdiHeaderLinks(
+    session,
+    url = "https://midataint.github.io/mdi-basic-training/docs/mdi-apps/exercise/",
+    baseDirs = getAppStepDir(module),    
+    envir = environment()
+)
 
 #----------------------------------------------------------------------
 # add your server elements here, replacing the code below

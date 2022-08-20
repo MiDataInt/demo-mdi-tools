@@ -22,7 +22,7 @@ displayResultsUI <- function(id, options) {
         dataSourceTableUI(
             ns('select'), 
             title = "Select Demo Data Set", 
-            width = 6, 
+            width = 8, 
             collapsible = FALSE
         ),
 
@@ -37,13 +37,15 @@ displayResultsUI <- function(id, options) {
             )
         ),
 
-        # display the file listing from the demo pipeline, and enable a reactive plot
+        # display a scatter plot of two data columns, using three different approaches
         fluidRow(
+
+            # display the plot using a custom module
             box(
                 status = 'primary',
                 solidHeader = FALSE,
-                width = 5,
-                title = "Correlation Plot",
+                width = 4,
+                title = "Custom Code",
                 fluidRow(
                     column(
                         width = 6,
@@ -56,33 +58,37 @@ displayResultsUI <- function(id, options) {
                 ),
                 imageOutput(ns('plot'))
             ), 
-            box(
-                status = 'primary',
-                solidHeader = FALSE,
-                width = 7,
-                title = "Directory Listing",
-                verbatimTextOutput(ns('ls'))
-            )
-        ),
 
-        # additional plots using MDI widget boxes
-        fluidRow(
+            # display the plot using the MDI staticPlotBox module
             staticPlotBoxUI(
                 ns("staticPlotBox"), 
                 status = 'primary',
                 solidHeader = FALSE,
-                width = 6,
+                width = 4,
                 title = "Static Plot Box",
                 code = TRUE
             ),
+
+            # display the plot using the MDI interactiveScatterPlot module
             interactivePlotBoxUI(
                 ns('interactivePlotBox'),
                 status = 'primary',
                 solidHeader = FALSE,
-                width = 6,
+                width = 4,
                 title = "Interactive Scatter Plot", 
                 code = TRUE,
                 type = "scatter"            
+            )
+        ),
+
+        # display the file listing from the demo pipeline
+        fluidRow(
+            box(
+                status = 'primary',
+                solidHeader = FALSE,
+                width = 8,
+                title = "Directory Listing",
+                verbatimTextOutput(ns('ls'))
             )
         )
     ) 

@@ -32,5 +32,14 @@ settings:
             type:   selectInput
             choices:
                 - blue
-                - darkred
+                - orange
+                - green
+                - red
+                - purple
+                - brown
+                - pink
+                - gray
+                - yellow
+                - teal
+                - black
             value:  blue  
